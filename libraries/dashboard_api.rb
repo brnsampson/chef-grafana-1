@@ -7,7 +7,7 @@ module GrafanaCookbook
       # Find dashboard from file and build payload
       dashboard_source_file = find_dashboard_source_file dashboard
       dashboard_options = {
-        'dashboard' => JSON.parse(File.read(dashboard_source_file)),
+        'dashboard' => get_dashboard_options(dashboard_source_file),
         'overwrite' => dashboard[:overwrite],
       }
 
@@ -48,7 +48,7 @@ module GrafanaCookbook
                       end
         raise "dashboard_sanity failure: #{err_msg_prt} was specified, but no dashboard found (checked: #{checked_paths})"
       end
-      dash_json = JSON.parse(File.read(dashboard_source_file))
+      dash_json = get_dashboard_options(dashboard_source_file)
 
       dash_json_title = dash_json['title'].tr('.', '-').tr(' ', '-').downcase
       if dash_json_title != dashboard_options[:name]
@@ -98,6 +98,11 @@ module GrafanaCookbook
 
     def find_dashboard_source_file(dashboard_options)
       lookup_paths(dashboard_options).detect { |path| File.exist?(path) }
+    end
+
+    def get_dashboard_options(dashboard_source_file)
+      json_hash = JSON.parse(File.read(dashboard_source_file))
+      return json_hash['dashboard'] || json_hash
     end
   end
 end
