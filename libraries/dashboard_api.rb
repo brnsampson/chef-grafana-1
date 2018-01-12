@@ -102,7 +102,7 @@ module GrafanaCookbook
 
     def get_dashboard_options(dashboard_source_file)
       json_hash = JSON.parse(File.read(dashboard_source_file))
-      return json_hash['dashboard'] || json_hash
+      json_hash['dashboard'] || json_hash
     end
   end
 end
